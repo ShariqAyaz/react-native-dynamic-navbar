@@ -10,10 +10,28 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
+  TextStyle,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
-import { Colors } from '../constants/colors';
-import { Typography } from '../constants/typography';
+
+// Default colors
+const DEFAULT_COLORS = {
+  gold: '#FF9500',
+  goldText: '#FFB340',
+  midnightBlue: '#1C1C1E',
+  textSecondary: '#B8B8C8',
+};
+
+// Default typography
+const DEFAULT_TYPOGRAPHY: { ui: { small: TextStyle } } = {
+  ui: {
+    small: {
+      fontSize: 12,
+      fontWeight: '400',
+      letterSpacing: 0,
+      lineHeight: 18,
+    },
+  },
+};
 
 /**
  * Icon configuration for nav items
@@ -82,9 +100,9 @@ export const DynamicNavbar: React.FC<DynamicNavbarProps> = ({
         styles.container,
         position === 'top' ? styles.containerTop : styles.containerBottom,
         { height },
-        backgroundColor && { backgroundColor },
-        borderColor && position === 'top' && { borderBottomColor: borderColor },
-        borderColor && position === 'bottom' && { borderTopColor: borderColor },
+        backgroundColor ? { backgroundColor } : undefined,
+        borderColor && position === 'top' ? { borderBottomColor: borderColor } : undefined,
+        borderColor && position === 'bottom' ? { borderTopColor: borderColor } : undefined,
       ]}
     >
       {/* Glassy backdrop overlay for enhanced transparency effect */}
@@ -93,7 +111,7 @@ export const DynamicNavbar: React.FC<DynamicNavbarProps> = ({
         const isActive = activeItemId === item.id;
         const IconComponent = getIconComponent(item.icon.family);
         const iconSize = item.icon.size || 24;
-        const iconColor = isActive ? Colors.goldText : Colors.textSecondary;
+        const iconColor = isActive ? DEFAULT_COLORS.goldText : DEFAULT_COLORS.textSecondary;
 
         return (
           <TouchableOpacity
@@ -114,7 +132,7 @@ export const DynamicNavbar: React.FC<DynamicNavbarProps> = ({
               <IconComponent
                 name={item.icon.name}
                 size={item.isSpecial ? iconSize + 4 : iconSize}
-                color={item.isSpecial ? Colors.midnightBlue : iconColor}
+                color={item.isSpecial ? DEFAULT_COLORS.midnightBlue : iconColor}
               />
             </View>
             {showLabels && item.label && (
@@ -146,7 +164,6 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   containerTop: {
-    // Multi-layer shadows for glassy depth
     shadowColor: 'rgba(0, 0, 0, 0.4)',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
@@ -154,7 +171,6 @@ const styles = StyleSheet.create({
     elevation: 12,
   },
   containerBottom: {
-    // Multi-layer shadows for glassy depth
     shadowColor: 'rgba(0, 0, 0, 0.4)',
     shadowOffset: { width: 0, height: -4 },
     shadowOpacity: 0.3,
@@ -192,20 +208,20 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 24,
-    backgroundColor: Colors.gold,
+    backgroundColor: DEFAULT_COLORS.gold,
     marginBottom: 4,
   },
   label: {
-    ...Typography.ui.small,
-    color: Colors.textSecondary,
+    ...DEFAULT_TYPOGRAPHY.ui.small,
+    color: DEFAULT_COLORS.textSecondary,
     fontSize: 11,
   },
   labelActive: {
-    color: Colors.goldText,
+    color: DEFAULT_COLORS.goldText,
     fontWeight: '600',
   },
   labelSpecial: {
-    color: Colors.midnightBlue,
+    color: DEFAULT_COLORS.midnightBlue,
     fontWeight: '600',
   },
 });
