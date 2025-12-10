@@ -70,6 +70,8 @@ export interface NavItem {
   icon: NavItemIcon;
   onPress: () => void;
   isSpecial?: boolean;
+  visible?: boolean; // Show/hide this item (default: true)
+  disabled?: boolean; // Disable interaction (default: false)
 }
 
 /**
@@ -175,6 +177,13 @@ export const DynamicNavbar: React.FC<DynamicNavbarProps> = ({
       <View style={styles.glassOverlay} />
       {displayItems.map(item => {
         const isActive = activeItemId === item.id;
+        const isVisible = item.visible !== false; // default true
+        const isDisabled = item.disabled === true; // default false
+
+        // Skip rendering if not visible
+        if (!isVisible) {
+          return null;
+        }
 
         return (
           <TouchableOpacity
@@ -182,9 +191,11 @@ export const DynamicNavbar: React.FC<DynamicNavbarProps> = ({
             style={[
               styles.tab,
               item.isSpecial && styles.tabSpecial,
+              isDisabled && styles.tabDisabled,
             ]}
-            onPress={item.onPress}
-            activeOpacity={0.7}
+            onPress={isDisabled ? undefined : item.onPress}
+            activeOpacity={isDisabled ? 1 : 0.7}
+            disabled={isDisabled}
           >
             <View
               style={[
@@ -255,6 +266,9 @@ const styles = StyleSheet.create({
   },
   tabSpecial: {
     flex: 1.2,
+  },
+  tabDisabled: {
+    opacity: 0.4,
   },
   iconContainer: {
     width: 32,

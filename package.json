@@ -1,7 +1,7 @@
 {
   "name": "react-native-dynamic-navbar",
-  "version": "0.2.0",
-  "description": "A fully configurable, item-injected navigation bar component for React Native with glassy transparent design",
+  "version": "1.0.0",
+  "description": "A fully configurable, item-injected navigation bar component for React Native with glassy transparent design, RTL/LTR support, and both vector and image icons",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "react-native": "src/index.ts",
@@ -18,6 +18,8 @@
     "lint": "eslint \"src/**/*.{js,ts,tsx}\"",
     "lint:fix": "eslint \"src/**/*.{js,ts,tsx}\" --fix",
     "format": "prettier --write \"src/**/*.{js,ts,tsx}\"",
+    "format:check": "prettier --check \"src/**/*.{js,ts,tsx}\"",
+    "test": "jest",
     "typecheck": "tsc --noEmit"
   },
   "keywords": [
@@ -30,7 +32,12 @@
     "glassy",
     "transparent",
     "configurable",
-    "dynamic"
+    "dynamic",
+    "rtl",
+    "ltr",
+    "image-icons",
+    "png-icons",
+    "vector-icons"
   ],
   "author": {
     "name": "Shariq Ayaz",
@@ -60,8 +67,8 @@
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-react": "^7.33.0",
     "eslint-plugin-react-native": "^4.1.0",
-    "prettier": "^3.7.4",
-    "typescript": "^5.9.3"
+    "prettier": "^3.0.0",
+    "typescript": "^5.0.0"
   },
   "engines": {
     "node": ">=18.0.0"

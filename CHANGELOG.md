@@ -1,19 +1,51 @@
 # Changelog
 
-All notable changes to this project will be documented in this file.
+## [1.0.0] - 2024-12-10
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+### 🎉 First Stable Release
 
-## [0.1.0] - 2024-12-10
+#### Core Features
+- **Item-agnostic design** - Fully configurable navigation bar with injected items
+- **Glassy transparent design** - Beautiful frosted glass effect with shadows
+- **Top/bottom positioning** - Flexible navbar placement
+- **Active state management** - Visual feedback for current selection
 
-### Added
-- Initial release
-- DynamicNavbar component with glassy transparent design
-- Support for top and bottom positioning
-- Configurable items with icons, labels, and callbacks
-- Support for multiple icon families (Ionicons, MaterialIcons, FontAwesome, Feather, MaterialCommunityIcons)
-- Special button styling for highlighted actions
-- Active state management
-- Full TypeScript support
-- Customisable height, background colour, and border colour
+#### Icon Support
+- **Vector icons** - Support for 5 icon families:
+  - Ionicons
+  - MaterialIcons
+  - FontAwesome
+  - Feather
+  - MaterialCommunityIcons
+- **PNG/Image icons** - Use local or remote images
+  - Local images: `require('./icon.png')`
+  - Remote images: `{ uri: 'https://...' }`
+  - Optional tint color for customisation
+- **Mix both types** - Use vector and image icons together
+
+#### Internationalisation
+- **RTL/LTR support** - Built-in support for Arabic and other RTL languages
+- Simple prop: `direction="rtl"` or `direction="ltr"`
+- Items automatically reorder for RTL
+
+#### Item Control
+- **Visible prop** - Show/hide items dynamically (`visible?: boolean`)
+- **Disabled prop** - Disable item interaction (`disabled?: boolean`)
+- Disabled items shown with reduced opacity (40%)
+
+#### Styling
+- Customisable height
+- Custom background colour
+- Custom border colour
+- Gold accent for active items
+- Special button styling (e.g., create button)
+
+#### TypeScript
+- Full type safety
+- Clear interfaces
+- Exported types for all props
+
+### Requirements
+- React Native >= 0.72.0
+- React >= 18.0.0
+- react-native-vector-icons >= 10.0.0
