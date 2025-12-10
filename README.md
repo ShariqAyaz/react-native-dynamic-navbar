@@ -209,3 +209,52 @@ MIT © [Shariq Ayaz](https://github.com/ShariqAyaz)
 **Shariq Ayaz**
 - Email: gr8shariq@gmail.com
 - GitHub: [@ShariqAyaz](https://github.com/ShariqAyaz)
+
+### Control Item Visibility and State
+
+You can dynamically show/hide or enable/disable items:
+
+```tsx
+const items: NavItem[] = [
+  {
+    id: 'home',
+    label: 'Home',
+    icon: { type: 'vector', family: 'Ionicons', name: 'home' },
+    onPress: () => {},
+  },
+  {
+    id: 'premium',
+    label: 'Premium',
+    icon: { type: 'vector', family: 'Ionicons', name: 'star' },
+    onPress: () => {},
+    disabled: true, // Shown but not clickable (40% opacity)
+  },
+  {
+    id: 'admin',
+    label: 'Admin',
+    icon: { type: 'vector', family: 'Ionicons', name: 'settings' },
+    onPress: () => {},
+    visible: false, // Completely hidden
+  },
+];
+```
+
+### Use Cases
+
+**Conditional visibility:**
+```tsx
+{
+  id: 'admin',
+  visible: user.isAdmin, // Only show for admins
+  // ...
+}
+```
+
+**Disabled state:**
+```tsx
+{
+  id: 'premium',
+  disabled: !user.isPremium, // Show but disable for free users
+  // ...
+}
+```
