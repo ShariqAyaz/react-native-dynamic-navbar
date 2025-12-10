@@ -1,6 +1,6 @@
 {
   "name": "react-native-dynamic-navbar",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A fully configurable, item-injected navigation bar component for React Native with glassy transparent design",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
