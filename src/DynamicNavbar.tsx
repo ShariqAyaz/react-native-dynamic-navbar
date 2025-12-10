@@ -12,10 +12,28 @@ import {
   StyleSheet,
   Image,
   ImageSourcePropType,
+  TextStyle,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
-import { Colors } from '../constants/colors';
-import { Typography } from '../constants/typography';
+
+// Default colors
+const DEFAULT_COLORS = {
+  gold: '#FF9500',
+  goldText: '#FFB340',
+  midnightBlue: '#1C1C1E',
+  textSecondary: '#B8B8C8',
+};
+
+// Default typography
+const DEFAULT_TYPOGRAPHY: { ui: { small: TextStyle } } = {
+  ui: {
+    small: {
+      fontSize: 12,
+      fontWeight: '400',
+      letterSpacing: 0,
+      lineHeight: 18,
+    },
+  },
+};
 
 /**
  * Vector icon configuration
@@ -32,10 +50,10 @@ export interface VectorIcon {
  */
 export interface ImageIcon {
   type: 'image';
-  source: ImageSourcePropType; // require('./icon.png') or {uri: 'https://...'}
+  source: ImageSourcePropType;
   width?: number;
   height?: number;
-  tintColor?: string; // Optional color tint for the image
+  tintColor?: string;
 }
 
 /**
@@ -51,7 +69,7 @@ export interface NavItem {
   label?: string;
   icon: NavItemIcon;
   onPress: () => void;
-  isSpecial?: boolean; // for center create-style buttons
+  isSpecial?: boolean;
 }
 
 /**
@@ -65,7 +83,7 @@ export interface DynamicNavbarProps {
   showLabels?: boolean;
   backgroundColor?: string;
   borderColor?: string;
-  direction?: 'ltr' | 'rtl'; // Layout direction for RTL languages
+  direction?: 'ltr' | 'rtl';
 }
 
 /**
@@ -105,8 +123,6 @@ const renderIcon = (
     // Only apply tintColor if specified (for PNG with transparency, not JPEG)
     if (icon.tintColor) {
       imageStyle.tintColor = icon.tintColor;
-    } else if (isActive && !isSpecial) {
-      // Don't auto-tint colored images
     }
 
     return (
@@ -121,13 +137,13 @@ const renderIcon = (
   // Vector icon
   const IconComponent = getIconComponent(icon.family);
   const iconSize = icon.size || 24;
-  const iconColor = isActive ? Colors.goldText : Colors.textSecondary;
+  const iconColor = isActive ? DEFAULT_COLORS.goldText : DEFAULT_COLORS.textSecondary;
 
   return (
     <IconComponent
       name={icon.name}
       size={isSpecial ? iconSize + 4 : iconSize}
-      color={isSpecial ? Colors.midnightBlue : iconColor}
+      color={isSpecial ? DEFAULT_COLORS.midnightBlue : iconColor}
     />
   );
 };
@@ -151,12 +167,11 @@ export const DynamicNavbar: React.FC<DynamicNavbarProps> = ({
         styles.container,
         position === 'top' ? styles.containerTop : styles.containerBottom,
         { height },
-        backgroundColor && { backgroundColor },
+        backgroundColor ? { backgroundColor } : undefined,
         borderColor && position === 'top' ? { borderBottomColor: borderColor } : undefined,
         borderColor && position === 'bottom' ? { borderTopColor: borderColor } : undefined,
       ]}
     >
-      {/* Glassy backdrop overlay for enhanced transparency effect */}
       <View style={styles.glassOverlay} />
       {displayItems.map(item => {
         const isActive = activeItemId === item.id;
@@ -208,7 +223,6 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   containerTop: {
-    // Multi-layer shadows for glassy depth
     shadowColor: 'rgba(0, 0, 0, 0.4)',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
@@ -216,7 +230,6 @@ const styles = StyleSheet.create({
     elevation: 12,
   },
   containerBottom: {
-    // Multi-layer shadows for glassy depth
     shadowColor: 'rgba(0, 0, 0, 0.4)',
     shadowOffset: { width: 0, height: -4 },
     shadowOpacity: 0.3,
@@ -254,20 +267,20 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 24,
-    backgroundColor: Colors.gold,
+    backgroundColor: DEFAULT_COLORS.gold,
     marginBottom: 4,
   },
   label: {
-    ...Typography.ui.small,
-    color: Colors.textSecondary,
+    ...DEFAULT_TYPOGRAPHY.ui.small,
+    color: DEFAULT_COLORS.textSecondary,
     fontSize: 11,
   },
   labelActive: {
-    color: Colors.goldText,
+    color: DEFAULT_COLORS.goldText,
     fontWeight: '600',
   },
   labelSpecial: {
-    color: Colors.midnightBlue,
+    color: DEFAULT_COLORS.midnightBlue,
     fontWeight: '600',
   },
 });
