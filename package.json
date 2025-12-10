@@ -46,7 +46,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git@github.com:ShariqAyaz/react-native-dynamic-navbar.git"
+    "url": "git+ssh://git@github.com/ShariqAyaz/react-native-dynamic-navbar.git"
   },
   "bugs": {
     "url": "https://github.com/ShariqAyaz/react-native-dynamic-navbar/issues"
