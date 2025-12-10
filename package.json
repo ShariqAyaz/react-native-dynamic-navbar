@@ -1,0 +1,69 @@
+{
+  "name": "react-native-dynamic-navbar",
+  "version": "0.1.0",
+  "description": "A fully configurable, item-injected navigation bar component for React Native with glassy transparent design",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "react-native": "src/index.ts",
+  "source": "src/index.ts",
+  "files": [
+    "src",
+    "lib",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "prepare": "npm run build",
+    "lint": "eslint \"src/**/*.{js,ts,tsx}\"",
+    "lint:fix": "eslint \"src/**/*.{js,ts,tsx}\" --fix",
+    "format": "prettier --write \"src/**/*.{js,ts,tsx}\"",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "react-native",
+    "navbar",
+    "navigation",
+    "ui",
+    "typescript",
+    "component",
+    "glassy",
+    "transparent",
+    "configurable",
+    "dynamic"
+  ],
+  "author": {
+    "name": "Shariq Ayaz",
+    "email": "gr8shariq@gmail.com"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:ShariqAyaz/react-native-dynamic-navbar.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ShariqAyaz/react-native-dynamic-navbar/issues"
+  },
+  "homepage": "https://github.com/ShariqAyaz/react-native-dynamic-navbar#readme",
+  "peerDependencies": {
+    "react": ">=18.0.0",
+    "react-native": ">=0.72.0",
+    "react-native-vector-icons": ">=10.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0",
+    "@types/react-native": "^0.72.0",
+    "@types/react-native-vector-icons": "^6.4.18",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.0.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-react": "^7.33.0",
+    "eslint-plugin-react-native": "^4.1.0",
+    "prettier": "^3.0.0",
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
