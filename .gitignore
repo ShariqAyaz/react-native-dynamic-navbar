@@ -11,6 +11,6 @@ coverage/
 
 # Package files
 package-lock.json
-
+test/
 # Development docs
 DEVELOPMENT.md

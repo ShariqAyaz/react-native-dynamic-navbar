@@ -651,34 +651,36 @@ const styles = StyleSheet.create({
   },
   // Wrapper for icon + glow
   iconWrapper: {
-    width: 44,
-    height: 44,
+    width: 32,
+    height: 32,
     alignItems: 'center',
     justifyContent: 'center',
     position: 'relative',
   },
-  // Glow effect on press - centered behind icon
+  // Glow effect on press - centered behind icon, larger than wrapper
   glowEffect: {
     position: 'absolute',
-    width: 44,
-    height: 44,
-    borderRadius: 22,
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    top: -8,
+    left: -8,
   },
   // Active indicator dot/pill - below label or icon
   activeIndicator: {
     width: 6,
     height: 6,
     borderRadius: 3,
-    marginTop: 4,
+    marginTop: 2,
   },
   activeIndicatorGlass: {
     width: 20,
     height: 3,
     borderRadius: 1.5,
-    marginTop: 4,
+    marginTop: 2,
   },
   activeIndicatorNoLabel: {
-    marginTop: 2,
+    marginTop: 1,
   },
   iconContainer: {
     width: 32,
@@ -692,13 +694,13 @@ const styles = StyleSheet.create({
     height: 48,
     borderRadius: 24,
     backgroundColor: DEFAULT_COLORS.gold,
-    marginBottom: 4,
+    marginBottom: 0,
   },
   label: {
     ...DEFAULT_TYPOGRAPHY.ui.small,
     color: DEFAULT_COLORS.textSecondary,
     fontSize: 11,
-    marginTop: 4,
+    marginTop: 1,
   },
   labelActive: {
     color: DEFAULT_COLORS.goldText,
