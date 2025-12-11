@@ -1,20 +1,20 @@
 # react-native-dynamic-navbar
 
-A fully configurable, item-injected navigation bar component for React Native with beautiful glassy transparent design.
+A fully configurable navigation bar component for React Native with glassmorphism effects and animated interactions.
 
 [![npm version](https://badge.fury.io/js/react-native-dynamic-navbar.svg)](https://www.npmjs.com/package/react-native-dynamic-navbar)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## Features
 
-- ✨ **Fully configurable** - Inject any icons, labels, and actions via props
-- 🎨 **Glassy transparent design** - Beautiful frosted glass effect with shadows
+- ✨ **Fully configurable** - Inject any icons, labels, and actions
+- 🎨 **Glassmorphism theme** - Frosted glass effect with optional real blur
+- ✨ **Animated interactions** - Glow effects and smooth transitions
 - 📍 **Flexible positioning** - Top or bottom placement
-- 🎯 **Item-agnostic** - No hardcoded navigation logic
-- 🔧 **Highly customisable** - Control height, colours, labels visibility
-- 📦 **TypeScript support** - Full type safety
-- 🎭 **Multiple icon families** - Support for Ionicons, MaterialIcons, FontAwesome, Feather, and MaterialCommunityIcons
-- 🌟 **Special button support** - Highlight center buttons (like create/add actions)
+- 🌍 **RTL/LTR support** - Right-to-left and left-to-right layouts
+- 🖼️ **Multiple icon types** - Vector icons, images (PNG/JPEG), and SVG
+- 📦 **TypeScript** - Full type safety
+- 🌟 **Special buttons** - Highlight center buttons (create/add actions)
 
 ## Installation
 
@@ -90,9 +90,13 @@ function App() {
 |------|------|---------|-------------|
 | `items` | `NavItem[]` | **required** | Array of navigation items |
 | `position` | `'top' \| 'bottom'` | `'bottom'` | Position of the navbar |
-| `height` | `number` | `70` | Height of the navbar in pixels |
-| `activeItemId` | `string` | `undefined` | ID of the currently active item |
-| `showLabels` | `boolean` | `true` | Whether to show labels below icons |
+| `height` | `number` | `70` | Height in pixels |
+| `activeItemId` | `string` | `undefined` | Currently active item ID |
+| `showLabels` | `boolean` | `true` | Show labels below icons |
+| `theme` | `'default' \| 'glass'` | `'default'` | Theme variant |
+| `direction` | `'ltr' \| 'rtl'` | `'ltr'` | Layout direction |
+| `enableGlow` | `boolean` | `true` (glass) | Enable glow effect on press |
+| `BlurComponent` | `Component` | `undefined` | Optional blur component |
 | `backgroundColor` | `string` | `undefined` | Override background colour |
 | `borderColor` | `string` | `undefined` | Override border colour |
 
@@ -108,13 +112,49 @@ function App() {
 
 ### NavItemIcon
 
-| Property | Type | Required | Description |
-|----------|------|----------|-------------|
-| `family` | `'Ionicons' \| 'MaterialIcons' \| 'FontAwesome' \| 'Feather' \| 'MaterialCommunityIcons'` | ✅ | Icon family |
-| `name` | `string` | ✅ | Icon name from the family |
-| `size` | `number` | ❌ | Icon size in pixels |
+Supports three icon types:
+
+**Vector Icons:**
+```tsx
+icon: { type: 'vector', family: 'Ionicons', name: 'home', size: 24 }
+```
+
+**Image Icons:**
+```tsx
+icon: { type: 'image', source: require('./icon.png'), width: 24, height: 24 }
+```
+
+**SVG Icons:**
+```tsx
+import HomeIcon from './icons/home.svg';
+icon: { type: 'svg', component: HomeIcon, width: 24, height: 24, color: '#fff' }
+```
 
 ## Examples
+
+### Glassmorphism Theme
+
+```tsx
+import { BlurView } from '@react-native-community/blur';
+
+<DynamicNavbar
+  items={navItems}
+  theme="glass"
+  BlurComponent={BlurView}  // Optional for real blur
+  blurIntensity={25}
+  activeItemId={activeTab}
+/>
+```
+
+### RTL Support
+
+```tsx
+<DynamicNavbar
+  items={navItems}
+  direction="rtl"  // Right-to-left layout
+  activeItemId={activeTab}
+/>
+```
 
 ### With Special Create Button
 
@@ -172,23 +212,15 @@ function MyScreen() {
 }
 ```
 
-## Styling
+## Themes
 
-The navbar comes with a beautiful glassy transparent design out of the box:
-- 65% transparent background
-- Frosted glass overlay effect
-- Deep shadows for depth
-- Gold accent colours for active state
+**Default:** Dark translucent design with gold accents
 
-You can customise the background and border colours:
-
-```tsx
-<DynamicNavbar
-  items={navItems}
-  backgroundColor="rgba(20, 20, 40, 0.9)"
-  borderColor="rgba(100, 100, 255, 0.3)"
-/>
-```
+**Glass:** Glassmorphism/frosted effect with:
+- Darker tinted glass background for better contrast
+- Animated glow effects on press
+- Smooth active state transitions
+- Optional real blur with `BlurComponent`
 
 ## Contributing
 
@@ -209,6 +241,10 @@ MIT © [Shariq Ayaz](https://github.com/ShariqAyaz)
 **Shariq Ayaz**
 - Email: gr8shariq@gmail.com
 - GitHub: [@ShariqAyaz](https://github.com/ShariqAyaz)
+
+---
+
+**⚠️ Beta Notice:** This package is in active development. The glassmorphism theme and animation features are in beta. APIs may change in minor versions. Please report any issues on [GitHub](https://github.com/ShariqAyaz/react-native-dynamic-navbar/issues).
 
 ### Control Item Visibility and State
 
