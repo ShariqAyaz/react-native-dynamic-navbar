@@ -126,6 +126,8 @@ export interface DynamicNavbarProps {
   glowColor?: string;
   /** Active indicator colour */
   activeColor?: string;
+  /** Show active indicator dot/pill (default: true) */
+  showActiveIndicator?: boolean;
 }
 
 /**
@@ -219,6 +221,7 @@ interface AnimatedNavItemProps {
   glowColor: string;
   activeColor: string;
   theme: NavbarTheme;
+  showActiveIndicator: boolean;
 }
 
 const AnimatedNavItem: React.FC<AnimatedNavItemProps> = ({
@@ -229,6 +232,7 @@ const AnimatedNavItem: React.FC<AnimatedNavItemProps> = ({
   glowColor,
   activeColor,
   theme,
+  showActiveIndicator,
 }) => {
   const glowAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(1)).current;
@@ -354,21 +358,6 @@ const AnimatedNavItem: React.FC<AnimatedNavItemProps> = ({
             {renderIcon(item.icon, isActive, item.isSpecial || false)}
           </View>
         </View>
-
-        {/* Active indicator */}
-        {!item.isSpecial && (
-          <Animated.View
-            style={[
-              styles.activeIndicator,
-              theme === 'glass' && styles.activeIndicatorGlass,
-              {
-                backgroundColor: activeColor,
-                opacity: activeIndicatorOpacity,
-                transform: [{ scale: activeIndicatorScale }],
-              },
-            ]}
-          />
-        )}
         
         {showLabels && item.label && (
           <Animated.Text
@@ -388,6 +377,22 @@ const AnimatedNavItem: React.FC<AnimatedNavItemProps> = ({
           >
             {item.label}
           </Animated.Text>
+        )}
+
+        {/* Active indicator - below label or icon */}
+        {showActiveIndicator && !item.isSpecial && (
+          <Animated.View
+            style={[
+              styles.activeIndicator,
+              theme === 'glass' && styles.activeIndicatorGlass,
+              !showLabels && styles.activeIndicatorNoLabel,
+              {
+                backgroundColor: activeColor,
+                opacity: activeIndicatorOpacity,
+                transform: [{ scale: activeIndicatorScale }],
+              },
+            ]}
+          />
         )}
       </Animated.View>
     </Pressable>
@@ -491,6 +496,7 @@ export const DynamicNavbar: React.FC<DynamicNavbarProps> = ({
   enableGlow,
   glowColor,
   activeColor,
+  showActiveIndicator = true,
 }) => {
   const displayItems = direction === 'rtl' ? [...items].reverse() : items;
   const themeStyles = getThemeStyles(theme, position);
@@ -572,6 +578,7 @@ export const DynamicNavbar: React.FC<DynamicNavbarProps> = ({
             glowColor={effectiveGlowColor}
             activeColor={effectiveActiveColor}
             theme={theme}
+            showActiveIndicator={showActiveIndicator}
           />
         );
       })}
@@ -657,12 +664,12 @@ const styles = StyleSheet.create({
     height: 44,
     borderRadius: 22,
   },
-  // Active indicator dot/pill
+  // Active indicator dot/pill - below label or icon
   activeIndicator: {
     width: 6,
     height: 6,
     borderRadius: 3,
-    marginTop: 2,
+    marginTop: 4,
   },
   activeIndicatorGlass: {
     width: 20,
@@ -670,11 +677,15 @@ const styles = StyleSheet.create({
     borderRadius: 1.5,
     marginTop: 4,
   },
+  activeIndicatorNoLabel: {
+    marginTop: 2,
+  },
   iconContainer: {
     width: 32,
     height: 32,
     alignItems: 'center',
     justifyContent: 'center',
+    marginBottom: 0,
   },
   iconContainerSpecial: {
     width: 48,
@@ -687,7 +698,7 @@ const styles = StyleSheet.create({
     ...DEFAULT_TYPOGRAPHY.ui.small,
     color: DEFAULT_COLORS.textSecondary,
     fontSize: 11,
-    marginTop: 2,
+    marginTop: 4,
   },
   labelActive: {
     color: DEFAULT_COLORS.goldText,
