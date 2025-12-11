@@ -36,7 +36,7 @@ const DEFAULT_TYPOGRAPHY: { ui: { small: TextStyle } } = {
 };
 
 /**
- * Vector icon configuration
+ * Vector icon configuration (from icon families)
  */
 export interface VectorIcon {
   type: 'vector';
@@ -46,7 +46,7 @@ export interface VectorIcon {
 }
 
 /**
- * Image/PNG icon configuration
+ * Image/PNG/JPEG icon configuration
  */
 export interface ImageIcon {
   type: 'image';
@@ -57,9 +57,22 @@ export interface ImageIcon {
 }
 
 /**
- * Icon can be either vector or image
+ * SVG icon configuration (requires react-native-svg and react-native-svg-transformer)
+ * Put SVG files in: src/assets/icons/
+ * Import as: import MyIcon from './assets/icons/my-icon.svg'
  */
-export type NavItemIcon = VectorIcon | ImageIcon;
+export interface SvgIcon {
+  type: 'svg';
+  component: React.ComponentType<any>;
+  width?: number;
+  height?: number;
+  color?: string;
+}
+
+/**
+ * Icon can be vector, image, or SVG
+ */
+export type NavItemIcon = VectorIcon | ImageIcon | SvgIcon;
 
 /**
  * Navigation item configuration
@@ -70,8 +83,8 @@ export interface NavItem {
   icon: NavItemIcon;
   onPress: () => void;
   isSpecial?: boolean;
-  visible?: boolean; // Show/hide this item (default: true)
-  disabled?: boolean; // Disable interaction (default: false)
+  visible?: boolean;
+  disabled?: boolean;
 }
 
 /**
@@ -108,13 +121,32 @@ const getIconComponent = (family: VectorIcon['family']) => {
 };
 
 /**
- * Render icon based on type (vector or image)
+ * Render icon based on type (vector, image, or SVG)
  */
 const renderIcon = (
   icon: NavItemIcon,
   isActive: boolean,
   isSpecial: boolean
 ) => {
+  // SVG icon (from imported SVG files)
+  if (icon.type === 'svg') {
+    const SvgComponent = icon.component;
+    const iconSize = icon.width || icon.height || 24;
+    const iconColor = icon.color || (isActive ? DEFAULT_COLORS.goldText : DEFAULT_COLORS.textSecondary);
+    const finalColor = isSpecial ? DEFAULT_COLORS.midnightBlue : iconColor;
+    const finalSize = isSpecial ? iconSize + 4 : iconSize;
+
+    return (
+      <SvgComponent
+        width={finalSize}
+        height={finalSize}
+        color={finalColor}
+        fill={finalColor}
+      />
+    );
+  }
+
+  // Image/PNG/JPEG icon
   if (icon.type === 'image') {
     const imageSize = icon.width || icon.height || 24;
     const imageStyle: any = {
@@ -122,7 +154,6 @@ const renderIcon = (
       height: icon.height || imageSize,
     };
     
-    // Only apply tintColor if specified (for PNG with transparency, not JPEG)
     if (icon.tintColor) {
       imageStyle.tintColor = icon.tintColor;
     }
@@ -136,7 +167,7 @@ const renderIcon = (
     );
   }
 
-  // Vector icon
+  // Vector icon (from icon families)
   const IconComponent = getIconComponent(icon.family);
   const iconSize = icon.size || 24;
   const iconColor = isActive ? DEFAULT_COLORS.goldText : DEFAULT_COLORS.textSecondary;
@@ -160,7 +191,6 @@ export const DynamicNavbar: React.FC<DynamicNavbarProps> = ({
   borderColor,
   direction = 'ltr',
 }) => {
-  // Reverse items for RTL layout
   const displayItems = direction === 'rtl' ? [...items].reverse() : items;
 
   return (
@@ -177,10 +207,9 @@ export const DynamicNavbar: React.FC<DynamicNavbarProps> = ({
       <View style={styles.glassOverlay} />
       {displayItems.map(item => {
         const isActive = activeItemId === item.id;
-        const isVisible = item.visible !== false; // default true
-        const isDisabled = item.disabled === true; // default false
+        const isVisible = item.visible !== false;
+        const isDisabled = item.disabled === true;
 
-        // Skip rendering if not visible
         if (!isVisible) {
           return null;
         }
