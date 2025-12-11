@@ -126,8 +126,6 @@ export interface DynamicNavbarProps {
   glowColor?: string;
   /** Active indicator colour */
   activeColor?: string;
-  /** Show active indicator dot/pill (default: true) */
-  showActiveIndicator?: boolean;
 }
 
 /**
@@ -221,7 +219,6 @@ interface AnimatedNavItemProps {
   glowColor: string;
   activeColor: string;
   theme: NavbarTheme;
-  showActiveIndicator: boolean;
 }
 
 const AnimatedNavItem: React.FC<AnimatedNavItemProps> = ({
@@ -232,7 +229,6 @@ const AnimatedNavItem: React.FC<AnimatedNavItemProps> = ({
   glowColor,
   activeColor,
   theme,
-  showActiveIndicator,
 }) => {
   const glowAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(1)).current;
@@ -358,6 +354,21 @@ const AnimatedNavItem: React.FC<AnimatedNavItemProps> = ({
             {renderIcon(item.icon, isActive, item.isSpecial || false)}
           </View>
         </View>
+
+        {/* Active indicator */}
+        {!item.isSpecial && (
+          <Animated.View
+            style={[
+              styles.activeIndicator,
+              theme === 'glass' && styles.activeIndicatorGlass,
+              {
+                backgroundColor: activeColor,
+                opacity: activeIndicatorOpacity,
+                transform: [{ scale: activeIndicatorScale }],
+              },
+            ]}
+          />
+        )}
         
         {showLabels && item.label && (
           <Animated.Text
@@ -380,12 +391,12 @@ const AnimatedNavItem: React.FC<AnimatedNavItemProps> = ({
         )}
 
         {/* Active indicator - below label or icon */}
-        {showActiveIndicator && !item.isSpecial && (
+        {!item.isSpecial && (
           <Animated.View
             style={[
               styles.activeIndicator,
               theme === 'glass' && styles.activeIndicatorGlass,
-              !showLabels && styles.activeIndicatorNoLabel,
+              !(showLabels && item.label) && styles.activeIndicatorNoLabel,
               {
                 backgroundColor: activeColor,
                 opacity: activeIndicatorOpacity,
@@ -496,7 +507,6 @@ export const DynamicNavbar: React.FC<DynamicNavbarProps> = ({
   enableGlow,
   glowColor,
   activeColor,
-  showActiveIndicator = true,
 }) => {
   const displayItems = direction === 'rtl' ? [...items].reverse() : items;
   const themeStyles = getThemeStyles(theme, position);
@@ -578,7 +588,6 @@ export const DynamicNavbar: React.FC<DynamicNavbarProps> = ({
             glowColor={effectiveGlowColor}
             activeColor={effectiveActiveColor}
             theme={theme}
-            showActiveIndicator={showActiveIndicator}
           />
         );
       })}
@@ -651,22 +660,20 @@ const styles = StyleSheet.create({
   },
   // Wrapper for icon + glow
   iconWrapper: {
-    width: 32,
-    height: 32,
+    width: 44,
+    height: 44,
     alignItems: 'center',
     justifyContent: 'center',
     position: 'relative',
   },
-  // Glow effect on press - centered behind icon, larger than wrapper
+  // Glow effect on press - centered behind icon
   glowEffect: {
     position: 'absolute',
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    top: -8,
-    left: -8,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
   },
-  // Active indicator dot/pill - below label or icon
+  // Active indicator dot/pill
   activeIndicator: {
     width: 6,
     height: 6,
@@ -677,7 +684,7 @@ const styles = StyleSheet.create({
     width: 20,
     height: 3,
     borderRadius: 1.5,
-    marginTop: 2,
+    marginTop: 4,
   },
   activeIndicatorNoLabel: {
     marginTop: 1,
@@ -687,20 +694,19 @@ const styles = StyleSheet.create({
     height: 32,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 0,
   },
   iconContainerSpecial: {
     width: 48,
     height: 48,
     borderRadius: 24,
     backgroundColor: DEFAULT_COLORS.gold,
-    marginBottom: 0,
+    marginBottom: 4,
   },
   label: {
     ...DEFAULT_TYPOGRAPHY.ui.small,
     color: DEFAULT_COLORS.textSecondary,
     fontSize: 11,
-    marginTop: 1,
+    marginTop: 2,
   },
   labelActive: {
     color: DEFAULT_COLORS.goldText,
