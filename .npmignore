@@ -1,0 +1,9 @@
+tsconfig.json
+.gitignore
+DEVELOPMENT.md
+docs/
+node_modules/
+*.log
+*.tgz
+.DS_Store
+coverage/

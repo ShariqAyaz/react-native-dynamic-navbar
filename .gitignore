@@ -7,3 +7,10 @@ dist/
 coverage/
 .env
 .env.local
+*.tgz
+
+# Package files
+package-lock.json
+
+# Development docs
+DEVELOPMENT.md
