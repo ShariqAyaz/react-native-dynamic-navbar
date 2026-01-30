@@ -216,11 +216,39 @@ function MyScreen() {
 
 **Default:** Dark translucent design with gold accents
 
-**Glass:** Glassmorphism/frosted effect with:
-- Darker tinted glass background for better contrast
-- Animated glow effects on press
-- Smooth active state transitions
-- Optional real blur with `BlurComponent`
+**Glass (Liquid Glass):** Apple-grade professional glassmorphism featuring:
+- **4-Layer Glass Stack:**
+  - Base material with enhanced background saturation simulation
+  - Specular edge highlights (subtle top-edge light catch)
+  - Soft, diffused physical shadows (40px radius, 0.08 opacity)
+  - Variable border opacity (bright on top edges, subtle on bottom/sides)
+- **Enhanced Color Vibrancy:** Multi-layer overlays that simulate CSS `saturate(200%)` for vibrant, non-muddy appearance
+- **Apple's Signature Animations:** Cubic-bezier easing curve (0.16, 1, 0.3, 1) for that "weighty yet responsive" feel
+- **Animated glow effects** on press with improved color composition
+- **Smooth active state transitions** using Apple's standard timing
+- **Optional real blur** with `BlurComponent` (@react-native-community/blur)
+
+### Liquid Glass Technology
+
+The glass theme now implements Apple's "Liquid Glass" design principles (as seen in macOS Tahoe and iOS 26):
+
+```tsx
+// Enhanced glassmorphism with professional-grade fidelity
+<DynamicNavbar
+  items={navItems}
+  theme="glass"
+  BlurComponent={BlurView}  // Optional for real backdrop blur
+  blurIntensity={25}
+  activeItemId={activeTab}
+/>
+```
+
+**What makes it "Liquid Glass":**
+- **Saturation Boost:** Strategic color overlays simulate the CSS `saturate(180-200%)` effect that makes backgrounds vibrant instead of muddy gray
+- **Variable Borders:** Top edges are brighter (rgba 0.4) simulating light catch, bottom/sides are subtle (rgba 0.1-0.15)
+- **Specular Highlights:** 1.5px bright overlay on the top edge creates realistic light reflection
+- **Soft Shadows:** Large radius (40px) with very low opacity (0.08) for Apple's signature diffused depth
+- **Physics-Based Animation:** All animations use Apple's (0.16, 1, 0.3, 1) cubic-bezier curve for authentic feel
 
 ## Contributing
 

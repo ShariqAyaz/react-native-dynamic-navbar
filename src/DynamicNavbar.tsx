@@ -19,6 +19,7 @@ import {
   ViewStyle,
   Animated,
   Pressable,
+  Easing,
 } from 'react-native';
 
 // Default colors
@@ -180,7 +181,7 @@ const renderIcon = (
       width: icon.width || imageSize,
       height: icon.height || imageSize,
     };
-    
+
     if (icon.tintColor) {
       imageStyle.tintColor = icon.tintColor;
     }
@@ -234,30 +235,31 @@ const AnimatedNavItem: React.FC<AnimatedNavItemProps> = ({
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const activeAnim = useRef(new Animated.Value(isActive ? 1 : 0)).current;
 
-  // Animate active state transitions
+  // Animate active state transitions with Apple's cubic-bezier curve
   useEffect(() => {
-    Animated.spring(activeAnim, {
+    Animated.timing(activeAnim, {
       toValue: isActive ? 1 : 0,
+      duration: 400,
+      easing: Easing.bezier(0.16, 1, 0.3, 1), // Apple's signature curve
       useNativeDriver: true,
-      tension: 50,
-      friction: 7,
     }).start();
   }, [isActive, activeAnim]);
 
   const handlePressIn = useCallback(() => {
     if (!enableGlow || item.disabled) return;
-    
-    // Scale down slightly and start glow
+
+    // Scale down slightly and start glow with Apple's easing
     Animated.parallel([
-      Animated.spring(scaleAnim, {
+      Animated.timing(scaleAnim, {
         toValue: 0.92,
+        duration: 200,
+        easing: Easing.bezier(0.16, 1, 0.3, 1),
         useNativeDriver: true,
-        tension: 100,
-        friction: 10,
       }),
       Animated.timing(glowAnim, {
         toValue: 1,
         duration: 150,
+        easing: Easing.bezier(0.16, 1, 0.3, 1),
         useNativeDriver: true,
       }),
     ]).start();
@@ -265,14 +267,14 @@ const AnimatedNavItem: React.FC<AnimatedNavItemProps> = ({
 
   const handlePressOut = useCallback(() => {
     if (!enableGlow || item.disabled) return;
-    
-    // Scale back and fade glow with spread effect
+
+    // Scale back and fade glow with Apple's easing
     Animated.parallel([
-      Animated.spring(scaleAnim, {
+      Animated.timing(scaleAnim, {
         toValue: 1,
+        duration: 400,
+        easing: Easing.bezier(0.16, 1, 0.3, 1),
         useNativeDriver: true,
-        tension: 50,
-        friction: 7,
       }),
       Animated.sequence([
         // Brief hold at peak glow
@@ -281,6 +283,7 @@ const AnimatedNavItem: React.FC<AnimatedNavItemProps> = ({
         Animated.timing(glowAnim, {
           toValue: 0,
           duration: 300,
+          easing: Easing.bezier(0.16, 1, 0.3, 1),
           useNativeDriver: true,
         }),
       ]),
@@ -344,7 +347,7 @@ const AnimatedNavItem: React.FC<AnimatedNavItemProps> = ({
               ]}
             />
           )}
-          
+
           <View
             style={[
               styles.iconContainer,
@@ -369,7 +372,7 @@ const AnimatedNavItem: React.FC<AnimatedNavItemProps> = ({
             ]}
           />
         )}
-        
+
         {showLabels && item.label && (
           <Animated.Text
             style={[
@@ -418,39 +421,47 @@ const getThemeStyles = (
   position: 'top' | 'bottom'
 ): { container: ViewStyle; overlay: ViewStyle; border: ViewStyle } => {
   if (theme === 'glass') {
-    // Glassmorphism / Crystal / Frosted glass theme (like Canva)
-    // Much more visible - darker tinted glass for better icon contrast
+    // Liquid Glass theme (Apple's professional-grade glassmorphism)
+    // 4-Layer Stack: Base Material + Specular Edge + Physical Shadow + Variable Border
     return {
       container: {
+        // Layer 1: Base Material - darker for better contrast
         backgroundColor: Platform.select({
-          ios: 'rgba(30, 30, 40, 0.6)',
-          android: 'rgba(30, 30, 40, 0.65)',
+          ios: 'rgba(30, 30, 40, 0.5)',
+          android: 'rgba(30, 30, 40, 0.55)',
         }),
+        // Layer 3: Physical Shadow - soft, diffused, long (Apple standard)
         ...(position === 'top'
           ? {
-              shadowColor: '#000',
-              shadowOffset: { width: 0, height: 8 },
-              shadowOpacity: 0.35,
-              shadowRadius: 24,
-              elevation: 20,
-            }
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 12 },
+            shadowOpacity: 0.08, // Much softer diffusion
+            shadowRadius: 40, // Larger spread
+            elevation: 24,
+          }
           : {
-              shadowColor: '#000',
-              shadowOffset: { width: 0, height: -8 },
-              shadowOpacity: 0.35,
-              shadowRadius: 24,
-              elevation: 20,
-            }),
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: -12 },
+            shadowOpacity: 0.08,
+            shadowRadius: 40,
+            elevation: 24,
+          }),
       },
       overlay: {
+        // Enhanced saturation simulation layer
         backgroundColor: Platform.select({
-          ios: 'rgba(255, 255, 255, 0.08)',
-          android: 'rgba(255, 255, 255, 0.06)',
+          ios: 'rgba(255, 255, 255, 0.1)',
+          android: 'rgba(255, 255, 255, 0.08)',
         }),
-        borderTopWidth: 1,
-        borderTopColor: 'rgba(255, 255, 255, 0.25)',
+        // Layer 4: Variable Border - bright on top (light catch), subtle on bottom
+        borderTopWidth: position === 'bottom' ? 1.5 : 0,
+        borderTopColor: 'rgba(255, 255, 255, 0.4)', // Bright specular edge
         borderBottomWidth: position === 'top' ? 1 : 0,
-        borderBottomColor: 'rgba(255, 255, 255, 0.1)',
+        borderBottomColor: 'rgba(255, 255, 255, 0.1)', // Subtle bottom
+        borderLeftWidth: 0.5,
+        borderLeftColor: 'rgba(255, 255, 255, 0.15)',
+        borderRightWidth: 0.5,
+        borderRightColor: 'rgba(255, 255, 255, 0.15)',
       },
       border: {
         position: 'absolute',
@@ -458,8 +469,6 @@ const getThemeStyles = (
         left: 0,
         right: 0,
         bottom: 0,
-        borderTopWidth: 0.5,
-        borderTopColor: 'rgba(255, 255, 255, 0.2)',
       },
     };
   }
@@ -470,19 +479,19 @@ const getThemeStyles = (
       backgroundColor: 'rgba(10, 7, 25, 0.65)',
       ...(position === 'top'
         ? {
-            shadowColor: 'rgba(0, 0, 0, 0.4)',
-            shadowOffset: { width: 0, height: 4 },
-            shadowOpacity: 0.3,
-            shadowRadius: 16,
-            elevation: 12,
-          }
+          shadowColor: 'rgba(0, 0, 0, 0.4)',
+          shadowOffset: { width: 0, height: 4 },
+          shadowOpacity: 0.3,
+          shadowRadius: 16,
+          elevation: 12,
+        }
         : {
-            shadowColor: 'rgba(0, 0, 0, 0.4)',
-            shadowOffset: { width: 0, height: -4 },
-            shadowOpacity: 0.3,
-            shadowRadius: 16,
-            elevation: 12,
-          }),
+          shadowColor: 'rgba(0, 0, 0, 0.4)',
+          shadowOffset: { width: 0, height: -4 },
+          shadowOpacity: 0.3,
+          shadowRadius: 16,
+          elevation: 12,
+        }),
     },
     overlay: {
       backgroundColor: 'rgba(255, 255, 255, 0.03)',
@@ -510,13 +519,13 @@ export const DynamicNavbar: React.FC<DynamicNavbarProps> = ({
 }) => {
   const displayItems = direction === 'rtl' ? [...items].reverse() : items;
   const themeStyles = getThemeStyles(theme, position);
-  
+
   // Default glow enabled for glass theme
   const isGlowEnabled = enableGlow ?? (theme === 'glass');
-  
+
   // Default colours based on theme
-  const effectiveGlowColor = glowColor ?? (theme === 'glass' 
-    ? 'rgba(255, 255, 255, 0.5)' 
+  const effectiveGlowColor = glowColor ?? (theme === 'glass'
+    ? 'rgba(255, 255, 255, 0.5)'
     : 'rgba(255, 149, 0, 0.4)');
   const effectiveActiveColor = activeColor ?? (theme === 'glass'
     ? 'rgba(255, 255, 255, 0.2)'
@@ -550,6 +559,13 @@ export const DynamicNavbar: React.FC<DynamicNavbarProps> = ({
             <View style={[styles.glassOverlay, styles.glassFrostLayer1]} />
             <View style={[styles.glassOverlay, styles.glassFrostLayer2]} />
             <View style={[styles.glassOverlay, styles.glassFrostLayer3]} />
+            {/* Specular Highlight - top edge light catch (Layer 2) */}
+            {position === 'bottom' && (
+              <View style={styles.glassSpecularHighlight} />
+            )}
+            {position === 'top' && (
+              <View style={[styles.glassSpecularHighlight, { top: 'auto', bottom: 0 }]} />
+            )}
             <View style={themeStyles.border as ViewStyle} />
           </>
         )}
@@ -626,21 +642,33 @@ const styles = StyleSheet.create({
   glassBlurOverlay: {
     backgroundColor: 'rgba(20, 20, 30, 0.3)',
   },
-  // Glass theme: layered frost effect (CSS-only fallback)
+  // Liquid Glass theme: Enhanced multi-layer frost effect
+  // Layer 1: Base frost for diffusion
   glassFrostLayer1: {
-    backgroundColor: 'rgba(255, 255, 255, 0.04)',
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
   },
+  // Layer 2: Saturation boost - cool tone enhancement (simulates CSS saturate)
   glassFrostLayer2: {
     backgroundColor: Platform.select({
-      ios: 'rgba(180, 180, 200, 0.06)',
-      android: 'rgba(180, 180, 200, 0.05)',
+      ios: 'rgba(100, 120, 255, 0.035)', // Cool blue tint for color vibrancy
+      android: 'rgba(100, 120, 255, 0.03)',
     }),
   },
+  // Layer 3: Additional white frost for depth
   glassFrostLayer3: {
     backgroundColor: Platform.select({
-      ios: 'rgba(255, 255, 255, 0.02)',
-      android: 'rgba(255, 255, 255, 0.02)',
+      ios: 'rgba(255, 255, 255, 0.03)',
+      android: 'rgba(255, 255, 255, 0.025)',
     }),
+  },
+  // Layer 2: Specular Highlight - top edge light catch (Apple's signature detail)
+  glassSpecularHighlight: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 1.5,
+    backgroundColor: 'rgba(255, 255, 255, 0.25)',
   },
   tab: {
     flex: 1,
